@@ -1,0 +1,159 @@
+{
+  "network": {
+    "cse.lk": {
+      "status": 405,
+      "reachable": true
+    },
+    "yahoo_finance": {
+      "status": 200,
+      "reachable": true
+    },
+    "web.archive.org": {
+      "status": null,
+      "reachable": false,
+      "error": "TIMEOUT"
+    },
+    "investing.com": {
+      "status": 200,
+      "reachable": true
+    },
+    "lbo.lk": {
+      "status": 200,
+      "reachable": true
+    },
+    "ft.lk": {
+      "status": 200,
+      "reachable": true
+    },
+    "dailymirror.lk": {
+      "status": 200,
+      "reachable": true
+    },
+    "alphavantage.co": {
+      "status": 200,
+      "reachable": true
+    },
+    "finnhub.io": {
+      "status": 200,
+      "reachable": true
+    }
+  },
+  "cse_api": {
+    "chartData": {
+      "method": "POST",
+      "status": 200,
+      "ok": true,
+      "preview": "[{\"d\":1740475620000,\"v\":16345.01,\"pc\":-1.9597246356556879},{\"d\":1740648420000,\"v\":16430.77,\"pc\":0.5246861274480713},{\"d\""
+    },
+    "allStock": {
+      "method": "POST",
+      "status": 400,
+      "ok": false,
+      "preview": "{\"apierror\":{\"status\":\"BAD_REQUEST\",\"message\":\"Could not find the POST method for URL /api/allStock\",\"subErrors\":null}}"
+    },
+    "companyInfoSummery": {
+      "method": "POST",
+      "status": 200,
+      "ok": true,
+      "preview": "{\"reqSymbolBetaInfo\":{\"securityId\":369,\"triASIBetaValue\":1.5246212,\"betaValueSPSL\":1.3526167,\"triASIBetaPeriod\":\"2025\",\""
+    },
+    "returnAspiSnp": {
+      "method": "GET",
+      "status": 200,
+      "ok": true,
+      "preview": "{\"id\":1,\"status\":1}"
+    },
+    "marketStatus": {
+      "method": "GET",
+      "status": 405,
+      "ok": false,
+      "preview": "{\"apierror\":{\"status\":\"METHOD_NOT_ALLOWED\",\"message\":\"Could not find the GET method for URL Method not support\",\"subErro"
+    },
+    "graphData": {
+      "method": "POST",
+      "status": 400,
+      "ok": false,
+      "preview": "{\"apierror\":{\"status\":\"BAD_REQUEST\",\"message\":\"Could not find the POST method for URL /api/graphData\",\"subErrors\":null}}"
+    },
+    "aspi": {
+      "method": "GET",
+      "status": 405,
+      "ok": false,
+      "preview": "{\"apierror\":{\"status\":\"METHOD_NOT_ALLOWED\",\"message\":\"Could not find the GET method for URL Method not support\",\"subErro"
+    },
+    "aspi/history": {
+      "method": "GET",
+      "status": 400,
+      "ok": false,
+      "preview": "{\"apierror\":{\"status\":\"BAD_REQUEST\",\"message\":\"Could not find the GET method for URL /api/aspi/history\",\"subErrors\":null"
+    },
+    "aspi/daily": {
+      "method": "GET",
+      "status": 400,
+      "ok": false,
+      "preview": "{\"apierror\":{\"status\":\"BAD_REQUEST\",\"message\":\"Could not find the GET method for URL /api/aspi/daily\",\"subErrors\":null}}"
+    }
+  },
+  "aspi_gap": {
+    "gap_start": "2021-02-20",
+    "gap_end": "2025-02-24",
+    "gap_days": 1465
+  },
+  "aspi_combined_rows": 5750,
+  "yfinance_hits": [],
+  "lbo": {
+    "wp_rest_api": {
+      "status": 200,
+      "total_posts": 1438,
+      "total_pages": 288,
+      "newest": "2026-02-17T17:16:20",
+      "oldest": "2021-03-30T08:33:47"
+    },
+    "rss": {
+      "status": 200,
+      "entry_count": 10,
+      "latest_title": "Pan Asia Bank\u2019s Overall Assets Soar over Rs. 300Bn & achieve PAT of Rs.4Bn for Second Consecutive Year",
+      "latest_date": "Tue, 17 Feb 2026 11:46:20 +0000"
+    }
+  },
+  "dailyft": {
+    "wp_rest_api": {
+      "status": 404,
+      "available": false
+    },
+    "rss": {
+      "status": 404,
+      "entry_count": 0
+    },
+    "html_scrape": {
+      "status": 200,
+      "article_tags_found": 0,
+      "note": "JS-rendered SPA \u2014 requires Playwright for full extraction"
+    }
+  },
+  "alphavantage": {
+    "COMB.CM": {
+      "matches": 0,
+      "cse_matches": 0
+    },
+    "JKH.CM": {
+      "matches": 0,
+      "cse_matches": 0
+    },
+    "COMB": {
+      "matches": 6,
+      "cse_matches": 0
+    }
+  },
+  "finnhub": {
+    "COMB.CM": {
+      "error": "FinnhubAPIException(status_code: 403): You don't have access to this resource."
+    },
+    "JKH.CM": {
+      "error": "FinnhubAPIException(status_code: 403): You don't have access to this resource."
+    },
+    "CSE:COMB": {
+      "error": "FinnhubAPIException(status_code: 403): You don't have access to this resource."
+    }
+  }
+}

@@ -1,0 +1,25 @@
+# Environments
+.env
+.venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Data
+data/raw/
+data/processed/
+data/published/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+.windsurf
+
+# Documentation
+implementation_plan.md
+cse_dataset.md
