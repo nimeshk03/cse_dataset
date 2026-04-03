@@ -9,10 +9,13 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Data
+# Data — raw source files are large, keep ignored
 data/raw/
-data/processed/
-data/published/
+
+# Processed and published data ARE tracked (updated by CI daily)
+# Exclude only large intermediate files
+data/processed/daily_ohlcv/
+data/processed/sentiment/
 
 # IDE & OS
 .vscode/
@@ -21,5 +24,5 @@ data/published/
 .windsurf
 
 # Documentation
-implementation_plan.md
-cse_dataset.md
+#implementation_plan.md
+#cse_dataset.md

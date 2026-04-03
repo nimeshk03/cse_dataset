@@ -1,3 +1,4 @@
+import argparse
 import requests
 import pandas as pd
 import time
@@ -8,6 +9,23 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
+
+RAW_CSV = 'data/raw/ohlcv/all_raw_2010_to_present.csv'
+
+
+def get_incremental_start() -> pd.Timestamp:
+    """Return the day after the latest date already in the raw CSV."""
+    if os.path.exists(RAW_CSV):
+        try:
+            existing = pd.read_csv(RAW_CSV, usecols=['date'])
+            last_date = pd.to_datetime(existing['date']).max()
+            start = last_date + pd.Timedelta(days=1)
+            logging.info("Incremental mode: last fetched date = %s, starting from %s",
+                         last_date.date(), start.date())
+            return start
+        except Exception as e:
+            logging.warning("Could not read existing raw CSV (%s) — falling back to full fetch", e)
+    return pd.to_datetime('2010-01-01')
 
 def fetch_trade_summary_for_date(date_str):
     url = 'https://www.cse.lk/api/tradeSummary'
@@ -22,12 +40,12 @@ def fetch_trade_summary_for_date(date_str):
         pass
     return date_str, None
 
-def collect_historical_prices():
+def collect_historical_prices(mode: str = 'full'):
     os.makedirs('data/raw/ohlcv', exist_ok=True)
     os.makedirs('data/processed/daily_ohlcv', exist_ok=True)
-    
-    # 1. Determine dates to fetch (2010-01-01 to yesterday)
-    start_date = pd.to_datetime('2010-01-01')
+
+    # 1. Determine dates to fetch
+    start_date = get_incremental_start() if mode == 'incremental' else pd.to_datetime('2010-01-01')
     end_date = pd.to_datetime(datetime.today().strftime('%Y-%m-%d')) - pd.Timedelta(days=1)
     
     # Generate business days
@@ -61,6 +79,9 @@ def collect_historical_prices():
     # Let's just collect 2021-2022 to show it works, then we can run the rest offline.
     
     target_dates = date_strings
+    if not target_dates:
+        logging.info("No new dates to fetch — dataset is already up to date.")
+        return
     logging.info(f"Fetching {len(target_dates)} dates concurrently...")
     
     records = []
@@ -95,8 +116,12 @@ def collect_historical_prices():
     # Convert to DataFrame
     df = pd.DataFrame(records)
     
-    # Save raw payload data for backup
-    df.to_csv('data/raw/ohlcv/all_raw_2010_to_present.csv', index=False)
+    # Append to existing raw CSV in incremental mode, otherwise overwrite
+    if mode == 'incremental' and os.path.exists(RAW_CSV):
+        existing = pd.read_csv(RAW_CSV)
+        df = pd.concat([existing, df], ignore_index=True).drop_duplicates(subset=['date', 'symbol'])
+        logging.info("Appended to existing raw CSV — total rows: %d", len(df))
+    df.to_csv(RAW_CSV, index=False)
     
     # Group by symbol and save individual files
     symbols = df['symbol'].unique()
@@ -175,4 +200,8 @@ def collect_historical_prices():
     logging.info(f"Collection complete. Success rate: {success_rate:.1%}")
 
 if __name__ == '__main__':
-    collect_historical_prices()
+    parser = argparse.ArgumentParser(description='Collect CSE OHLCV price data')
+    parser.add_argument('--mode', choices=['full', 'incremental'], default='full',
+                        help='full = fetch 2010-present; incremental = fetch from last date only')
+    args = parser.parse_args()
+    collect_historical_prices(mode=args.mode)
