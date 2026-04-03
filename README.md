@@ -139,9 +139,9 @@ python scripts/05_collect_macro.py
 | Fundamentals | Done | Dividends, splits, annual report index |
 | News & Sentiment | Done | LBO + CSE announcements, VADER scores |
 | Macroeconomic Features | Done | USD/LKR, S&P 500/Nikkei/HSI, GDP, CPI |
-| Cleaning & Feature Engineering | Planned | Returns, volatility, MA ratios, adj_close |
-| Baseline Notebooks | Planned | Price prediction, portfolio optimization, anomaly detection |
-| Publishing | Planned | Kaggle + Hugging Face, GitHub Actions daily update |
+| Cleaning & Feature Engineering | Done | `adj_close`, returns, volatility, MA ratios, volume z-score, unified 33-col parquet |
+| Baseline Notebooks | Done | EDA, price prediction (Ridge + RF), sentiment event study, Markowitz MVO, Isolation Forest |
+| CI / Daily Update | Done | GitHub Actions cron at 20:00 UTC Mon–Fri, incremental fetch + full pipeline rebuild |
 
 ---
 
