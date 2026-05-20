@@ -1,6 +1,6 @@
 # CSE Dataset — Data Quality Report
 
-Generated: 2026-05-19 21:34
+Generated: 2026-05-20 22:08
 
 ---
 
@@ -8,15 +8,15 @@ Generated: 2026-05-19 21:34
 
 | Metric | Value |
 |---|---|
-| Total rows | 1,226,064 |
-| Symbols | 287 |
-| Date range | 2010-01-01 to 2026-05-18 |
+| Total rows | 1,256,262 |
+| Symbols | 294 |
+| Date range | 2010-01-01 to 2026-05-19 |
 | Columns | 30 |
-| Trading-day rows (volume > 0) | 1,226,064 (100.0%) |
-| OHLC-invalid rows | 51,264 (4.18%) |
+| Trading-day rows (volume > 0) | 1,256,262 (100.0%) |
+| OHLC-invalid rows | 25,638 (2.04%) |
 | Outlier rows (\|pct_change\| > 50%) | 0 |
 | Rows with macro data (sp500 non-null) | 0 (0.0%) |
-| Rows with market sentiment | 175,357 (14.3%) |
+| Rows with market sentiment | 179,928 (14.3%) |
 
 ---
 
@@ -24,22 +24,22 @@ Generated: 2026-05-19 21:34
 
 | Column | Null Count | Null % |
 |---|---|---|
-| `volume_zscore` | 1,226,064 | 100.0% |
-| `finbert_label` | 1,226,064 | 100.0% |
-| `vader_score_max` | 1,226,064 | 100.0% |
-| `vader_score_mean` | 1,226,064 | 100.0% |
-| `market_vader_mean` | 1,050,707 | 85.7% |
-| `market_news_count` | 1,050,707 | 85.7% |
-| `usd_lkr` | 103,320 | 8.43% |
-| `close_to_ma200` | 28,413 | 2.32% |
-| `inflation_pct` | 28,126 | 2.29% |
-| `gdp_growth_pct` | 28,126 | 2.29% |
-| `close_to_ma50` | 6,888 | 0.56% |
-| `return_20d` | 5,740 | 0.47% |
-| `volatility_20d` | 2,870 | 0.23% |
-| `return_5d` | 1,435 | 0.12% |
-| `return_1d` | 287 | 0.02% |
-| `pct_change_1d` | 287 | 0.02% |
+| `volume_zscore` | 1,256,262 | 100.0% |
+| `finbert_label` | 1,256,262 | 100.0% |
+| `vader_score_max` | 1,256,262 | 100.0% |
+| `vader_score_mean` | 1,256,262 | 100.0% |
+| `market_vader_mean` | 1,076,334 | 85.68% |
+| `market_news_count` | 1,076,334 | 85.68% |
+| `usd_lkr` | 106,134 | 8.45% |
+| `close_to_ma200` | 29,106 | 2.32% |
+| `inflation_pct` | 29,106 | 2.32% |
+| `gdp_growth_pct` | 29,106 | 2.32% |
+| `close_to_ma50` | 7,056 | 0.56% |
+| `return_20d` | 5,880 | 0.47% |
+| `volatility_20d` | 2,940 | 0.23% |
+| `return_5d` | 1,470 | 0.12% |
+| `return_1d` | 294 | 0.02% |
+| `pct_change_1d` | 294 | 0.02% |
 
 ---
 
@@ -54,12 +54,12 @@ Generated: 2026-05-19 21:34
 
 | Stat | Value |
 |---|---|
-| Mean trading days per symbol | 4272 |
-| Median trading days per symbol | 4272 |
-| Min trading days | 4272 |
-| Max trading days | 4272 |
-| Symbols with full 10+ year coverage | 287 |
-| Symbols with OHLC violations | 12 |
+| Mean trading days per symbol | 4273 |
+| Median trading days per symbol | 4273 |
+| Min trading days | 4273 |
+| Max trading days | 4273 |
+| Symbols with full 10+ year coverage | 294 |
+| Symbols with OHLC violations | 6 |
 
 ---
 
