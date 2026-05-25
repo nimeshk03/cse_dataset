@@ -1,6 +1,6 @@
 # CSE Dataset — Data Quality Report
 
-Generated: 2026-05-22 21:26
+Generated: 2026-05-25 21:25
 
 ---
 
@@ -8,12 +8,12 @@ Generated: 2026-05-22 21:26
 
 | Metric | Value |
 |---|---|
-| Total rows | 1,239,750 |
+| Total rows | 1,240,040 |
 | Symbols | 290 |
-| Date range | 2010-01-01 to 2026-05-21 |
+| Date range | 2010-01-01 to 2026-05-22 |
 | Columns | 30 |
-| Trading-day rows (volume > 0) | 1,239,750 (100.0%) |
-| OHLC-invalid rows | 72,675 (5.86%) |
+| Trading-day rows (volume > 0) | 1,240,040 (100.0%) |
+| OHLC-invalid rows | 38,484 (3.10%) |
 | Outlier rows (\|pct_change\| > 50%) | 0 |
 | Rows with macro data (sp500 non-null) | 0 (0.0%) |
 | Rows with market sentiment | 177,770 (14.3%) |
@@ -24,15 +24,15 @@ Generated: 2026-05-22 21:26
 
 | Column | Null Count | Null % |
 |---|---|---|
-| `volume_zscore` | 1,239,750 | 100.0% |
-| `finbert_label` | 1,239,750 | 100.0% |
-| `vader_score_max` | 1,239,750 | 100.0% |
-| `vader_score_mean` | 1,239,750 | 100.0% |
-| `market_vader_mean` | 1,061,980 | 85.66% |
-| `market_news_count` | 1,061,980 | 85.66% |
-| `usd_lkr` | 105,270 | 8.49% |
-| `inflation_pct` | 29,290 | 2.36% |
-| `gdp_growth_pct` | 29,290 | 2.36% |
+| `volume_zscore` | 1,240,040 | 100.0% |
+| `finbert_label` | 1,240,040 | 100.0% |
+| `vader_score_max` | 1,240,040 | 100.0% |
+| `vader_score_mean` | 1,240,040 | 100.0% |
+| `market_vader_mean` | 1,062,270 | 85.66% |
+| `market_news_count` | 1,062,270 | 85.66% |
+| `usd_lkr` | 105,560 | 8.51% |
+| `inflation_pct` | 29,580 | 2.39% |
+| `gdp_growth_pct` | 29,580 | 2.39% |
 | `close_to_ma200` | 28,710 | 2.32% |
 | `close_to_ma50` | 6,960 | 0.56% |
 | `return_20d` | 5,800 | 0.47% |
@@ -54,12 +54,12 @@ Generated: 2026-05-22 21:26
 
 | Stat | Value |
 |---|---|
-| Mean trading days per symbol | 4275 |
-| Median trading days per symbol | 4275 |
-| Min trading days | 4275 |
-| Max trading days | 4275 |
+| Mean trading days per symbol | 4276 |
+| Median trading days per symbol | 4276 |
+| Min trading days | 4276 |
+| Max trading days | 4276 |
 | Symbols with full 10+ year coverage | 290 |
-| Symbols with OHLC violations | 17 |
+| Symbols with OHLC violations | 9 |
 
 ---
 
