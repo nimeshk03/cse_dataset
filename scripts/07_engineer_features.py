@@ -36,15 +36,17 @@ def load() -> tuple[pd.DataFrame, pd.DataFrame]:
     div = pd.DataFrame(columns=["symbol", "xd_date", "amount"])
     if os.path.exists(DIVIDENDS):
         raw = pd.read_csv(DIVIDENDS)
-        # xd column is a datetime string; extract just the date portion
         raw["xd_date"] = pd.to_datetime(raw["xd"], errors="coerce").dt.normalize()
-        # Only keep rows with a valid symbol mapping
         raw = raw.dropna(subset=["symbol", "xd_date"])
-        # The CSE API does not return a dividend amount — use 0 as placeholder
-        # (adj_close will equal close until amount data is available)
-        raw["amount"] = 0.0
+        if "amount_per_share" in raw.columns:
+            raw["amount"] = pd.to_numeric(raw["amount_per_share"], errors="coerce")
+        else:
+            raw["amount"] = pd.NA
         div = raw[["symbol", "xd_date", "amount"]].copy()
-        log.info("Loaded %d dividend records (%d symbols)", len(div), div["symbol"].nunique())
+        log.info(
+            "Loaded %d dividend records (%d symbols, %d with amounts)",
+            len(div), div["symbol"].nunique(), div["amount"].notna().sum()
+        )
     else:
         log.warning("Dividends file not found — adj_close will equal close")
 
@@ -61,14 +63,19 @@ def compute_adj_close(df: pd.DataFrame, div: pd.DataFrame) -> pd.DataFrame:
     Standard backward ratio-adjustment formula:
       For each ex-dividend date, multiply all PRIOR closes by (close_on_xd - dividend) / close_on_xd
 
-    Since dividend amounts are currently 0 (not available from the CSE API),
-    adj_close == close for all stocks until amounts are populated.
-    The column is added now so the schema is correct for future enrichment.
+    Missing dividend amounts are skipped. The event remains in dividends.csv
+    and is reported by validation, but it is not applied to adj_close.
     """
     df = df.sort_values(["symbol", "date"]).copy()
     df["adj_close"] = df["close"].astype("float64")
+    df["adj_close_adjusted"] = False
+    df["dividend_adjustment_events_applied"] = 0
 
-    if div.empty or div["amount"].sum() == 0:
+    div = div.copy()
+    div["amount"] = pd.to_numeric(div["amount"], errors="coerce")
+    div = div.dropna(subset=["amount"])
+    div = div[div["amount"] > 0]
+    if div.empty:
         log.info("No dividend amounts available — adj_close set equal to close")
         return df
 
@@ -83,17 +90,17 @@ def compute_adj_close(df: pd.DataFrame, div: pd.DataFrame) -> pd.DataFrame:
         for _, row in sym_div.iterrows():
             xd = row["xd_date"]
             amount = row["amount"]
-            if amount == 0:
-                continue
             prior_mask = grp["date"] < xd
             xd_close_rows = grp[grp["date"] == xd]["close"]
             if xd_close_rows.empty:
                 continue
             xd_close = xd_close_rows.iloc[0]
-            if xd_close <= 0:
+            if xd_close <= 0 or amount >= xd_close:
                 continue
             factor = (xd_close - amount) / xd_close
             adj[prior_mask.values] *= factor
+            df.loc[idx[prior_mask.values], "adj_close_adjusted"] = True
+            df.loc[idx[prior_mask.values], "dividend_adjustment_events_applied"] += 1
 
         df.loc[idx, "adj_close"] = adj
 

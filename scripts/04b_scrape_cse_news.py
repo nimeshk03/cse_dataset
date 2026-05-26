@@ -9,6 +9,7 @@ Outputs:
 import os
 import time
 import logging
+import re
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -26,6 +27,41 @@ def clean_html(text: str) -> str:
     if not text:
         return ""
     return BeautifulSoup(str(text), "html.parser").get_text(separator=" ").strip()
+
+
+def parse_possible_date(value):
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return pd.NaT
+    if isinstance(value, (int, float)) and value > 10_000:
+        return pd.to_datetime(value, unit="ms", errors="coerce")
+    return pd.to_datetime(value, errors="coerce")
+
+
+def extract_date(item: dict) -> tuple[object, str]:
+    for field in [
+        "date",
+        "createdDate",
+        "publishedDate",
+        "uploadedDate",
+        "newsDate",
+        "announcementDate",
+        "dateOfAnnouncement",
+    ]:
+        parsed = parse_possible_date(item.get(field))
+        if pd.notna(parsed):
+            return parsed, f"api_field:{field}"
+
+    for field in ["path", "url", "link"]:
+        value = item.get(field)
+        if not value:
+            continue
+        match = re.search(r"(20\d{2})[/-](\d{1,2})[/-](\d{1,2})", str(value))
+        if match:
+            parsed = pd.to_datetime("-".join(match.groups()), errors="coerce")
+            if pd.notna(parsed):
+                return parsed, f"url:{field}"
+
+    return pd.NaT, "missing_from_api_payload"
 
 
 def get_security_ids() -> dict[str, str]:
@@ -46,18 +82,12 @@ def get_company_news(symbol: str, sec_id: str) -> list[dict]:
             items = r.json().get("BN", [])
             rows = []
             for item in items:
-                raw_date = (
-                    item.get("date")
-                    or item.get("createdDate")
-                    or item.get("publishedDate")
-                    or item.get("uploadedDate")
-                    or item.get("newsDate")
-                    or item.get("announcementDate")
-                )
+                raw_date, date_source = extract_date(item)
                 rows.append({
                     "id":      item.get("id"),
                     "date":    raw_date,
-                    "date_missing_reason": None if raw_date else "missing_from_api_payload",
+                    "date_missing_reason": None if pd.notna(raw_date) else date_source,
+                    "date_source": date_source if pd.notna(raw_date) else None,
                     "source":  "CSE",
                     "symbol":  symbol,
                     "title":   clean_html(item.get("fileText", "")),
@@ -104,8 +134,13 @@ def main():
         raw_df["date_missing_reason"] = raw_df["date"].apply(
             lambda v: None if pd.notna(v) and str(v).strip() else "missing_from_api_payload"
         )
+    if "date_source" not in raw_df.columns:
+        raw_df["date_source"] = raw_df["date"].apply(
+            lambda v: "legacy_date_column" if pd.notna(v) and str(v).strip() else None
+        )
 
-    clean_df = raw_df[["id", "date", "date_missing_reason", "source", "symbol", "title", "url"]].copy()
+    clean_df = raw_df[["id", "date", "date_source", "date_missing_reason", "source", "symbol", "title", "url"]].copy()
+    clean_df["date"] = pd.to_datetime(clean_df["date"], errors="coerce")
     clean_df["text"] = clean_df["title"].fillna("")
     clean_df.to_csv(CLEAN_OUT, index=False)
     log.info("Saved clean: %s (%d rows)", CLEAN_OUT, len(clean_df))

@@ -54,10 +54,16 @@ One row per stock per trading day.
 |---|---|---|
 | `symbol` | string | CSE ticker symbol |
 | `company` | string | Company name as returned by the API |
-| `xd_date` | date | Ex-dividend date |
-| `payment_date` | date | Dividend payment date |
-| `type` | string | Announcement category (e.g., `Cash Dividend`) |
-| `remarks` | string | Free-text description of the corporate action |
+| `announcementCategory` | string | Announcement category returned by the CSE corporate calendar |
+| `dateOfAnnouncement` | date | Announcement date |
+| `recordDate` | date | Dividend record date |
+| `xd` | date | Ex-dividend date |
+| `paymentDate` | date | Dividend payment date |
+| `announcementId` | string | CSE announcement identifier |
+| `amount_per_share` | float64 | Parsed cash dividend amount per share where available |
+| `currency` | string | Parsed dividend currency, currently `LKR` where detected |
+| `amount_source` | string | Source used for amount parsing, e.g. `parsed_text`, `text_available`, `no_text_fields` |
+| `amount_parse_status` | string | `parsed` or `not_found` |
 
 ---
 
@@ -106,6 +112,7 @@ One row per stock per trading day.
 |---|---|---|
 | `symbol` | string | CSE ticker symbol the announcement relates to |
 | `date` | datetime | Announcement date |
+| `date_source` | string | API field or URL pattern used to recover the date |
 | `date_missing_reason` | string | Reason date is absent when the API payload does not provide one |
 | `source` | string | Always `CSE` |
 | `title` | string | Announcement subject |
@@ -174,6 +181,31 @@ Annual macroeconomic indicators for Sri Lanka from the World Bank.
 |---|---|---|
 | `date` | date | Date of rate observation |
 | `tbill_3m` | float64 | 3-month Treasury bill rate (%) |
+| `tbill_6m` | float64 | 6-month Treasury bill rate (%) |
 | `tbill_12m` | float64 | 12-month Treasury bill rate (%) |
+| `policy_rate` | float64 | CBSL policy rate (%) where supplied |
+| `source` | string | Source filename or provider for the normalized rate row |
 
-> Currently a placeholder. Populate with data from the [CBSL website](https://www.cbsl.gov.lk/en/statistics/statistical-tables/financial-sector/interest-rates).
+> Populate by placing a CBSL CSV/XLSX export at `data/raw/macro/interest_rates.csv`,
+> `data/raw/macro/interest_rates.xlsx`, `data/raw/macro/cbsl_interest_rates.csv`,
+> or `data/raw/macro/cbsl_interest_rates.xlsx`, then run `scripts/05_collect_macro.py`.
+
+---
+
+## Enriched Price Columns
+
+These columns are present in `data/processed/all_stocks_features.parquet` and
+`data/published/cse_unified.parquet`.
+
+| Column | Type | Description |
+|---|---|---|
+| `adj_close` | float64 | Dividend-adjusted close where parsed dividend amounts are available; otherwise equals `close` |
+| `adj_close_adjusted` | bool | Whether this row was affected by at least one applied dividend adjustment |
+| `dividend_adjustment_events_applied` | int64 | Count of parsed dividend events applied to this row |
+| `tbill_3m` | float64 | Forward-filled 3-month Treasury bill rate from `interest_rates.csv` |
+| `tbill_6m` | float64 | Forward-filled 6-month Treasury bill rate from `interest_rates.csv` |
+| `tbill_12m` | float64 | Forward-filled 12-month Treasury bill rate from `interest_rates.csv` |
+| `policy_rate` | float64 | Forward-filled policy rate from `interest_rates.csv` |
+| `vader_score_mean` | float64 | Mean symbol-level VADER score for dated CSE announcements on the symbol-day |
+| `vader_score_max` | float64 | Maximum symbol-level VADER score for dated CSE announcements on the symbol-day |
+| `news_count` | int64 | Count of dated CSE announcements joined to the symbol-day |

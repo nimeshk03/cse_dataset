@@ -20,6 +20,7 @@ FEATURES   = "data/processed/all_stocks_features.parquet"
 USD_LKR    = "data/processed/macro/usd_lkr_daily.csv"
 GLOBAL_IDX = "data/processed/macro/global_indices.csv"
 CBSL       = "data/processed/macro/cbsl_indicators.csv"
+INTEREST   = "data/processed/macro/interest_rates.csv"
 SENTIMENT  = "data/processed/news/unified_sentiment.csv"
 OUTPUT     = "data/published/cse_unified.parquet"
 
@@ -49,6 +50,15 @@ def load_macro() -> pd.DataFrame:
         df = df[keep].dropna(subset=["date"]).set_index("date")
         frames.append(df)
         log.info("CBSL indicators: %d rows", len(df))
+
+    if os.path.exists(INTEREST):
+        df = pd.read_csv(INTEREST, parse_dates=["date"])
+        keep = [c for c in ["date", "tbill_3m", "tbill_6m", "tbill_12m", "policy_rate"] if c in df.columns]
+        df = df[keep].dropna(subset=["date"]).set_index("date")
+        for col in [c for c in df.columns if c != "date"]:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+        frames.append(df)
+        log.info("Interest rates: %d rows", len(df))
 
     if not frames:
         log.warning("No macro files found — macro columns will be absent")

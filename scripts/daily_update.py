@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 REMOTE_STEPS = [
     ["scripts/02_collect_prices.py", "--mode", "incremental"],
+    ["scripts/03b_collect_corporate_actions.py"],
     ["scripts/05_collect_macro.py"],
     ["scripts/04a_scrape_lbo.py"],
     ["scripts/04b_scrape_cse_news.py"],

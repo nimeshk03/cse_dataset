@@ -16,6 +16,7 @@ data/raw/
 # Exclude only large intermediate files
 data/processed/daily_ohlcv/
 data/processed/sentiment/
+notebooks/executed/
 
 # IDE & OS
 .vscode/

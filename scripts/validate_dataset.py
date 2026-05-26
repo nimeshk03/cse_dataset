@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 UNIFIED = ROOT / "data/published/cse_unified.parquet"
 SUMMARY = ROOT / "data/published/quality_summary.json"
 REPORT = ROOT / "DATA_QUALITY_REPORT.md"
+DIVIDENDS = ROOT / "data/processed/fundamentals/dividends.csv"
+INTEREST = ROOT / "data/processed/macro/interest_rates.csv"
 
 
 def load_previous_summary() -> dict:
@@ -56,6 +58,23 @@ def compute_metrics(df: pd.DataFrame) -> dict:
     max_date = df["date"].max().date()
     today = datetime.now(timezone.utc).date()
 
+    dividends = pd.read_csv(DIVIDENDS) if DIVIDENDS.exists() else pd.DataFrame()
+    interest = pd.read_csv(INTEREST) if INTEREST.exists() else pd.DataFrame()
+    dividend_amount_rows = int(pd.to_numeric(dividends.get("amount_per_share", pd.Series(dtype=float)), errors="coerce").notna().sum()) if not dividends.empty else 0
+    interest_rows = int(len(interest.dropna(subset=["date"]))) if "date" in interest.columns else 0
+    interest_value_rows = 0
+    interest_date_max = None
+    interest_staleness_days = None
+    if not interest.empty:
+        rate_cols = [c for c in ["tbill_3m", "tbill_6m", "tbill_12m", "policy_rate"] if c in interest.columns]
+        if rate_cols:
+            interest_value_rows = int(interest[rate_cols].apply(pd.to_numeric, errors="coerce").notna().any(axis=1).sum())
+        if "date" in interest.columns:
+            interest_dates = pd.to_datetime(interest["date"], errors="coerce").dropna()
+            if not interest_dates.empty:
+                interest_date_max = interest_dates.max().date().isoformat()
+                interest_staleness_days = int((today - interest_dates.max().date()).days)
+
     metrics = {
         "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "total_rows": total_rows,
@@ -69,6 +88,18 @@ def compute_metrics(df: pd.DataFrame) -> dict:
         "ohlc_repaired_rows": int(df["ohlc_repaired"].sum()) if "ohlc_repaired" in df else 0,
         "ohlc_invalid_pct": round(ohlc_invalid / total_rows, 6) if total_rows else 0.0,
         "volume_zscore_null_pct": round(df["volume_zscore"].isna().mean(), 6) if "volume_zscore" in df else 1.0,
+        "adj_close_adjusted_rows": int(df["adj_close_adjusted"].sum()) if "adj_close_adjusted" in df else 0,
+        "adj_close_adjusted_symbols": int(df.loc[df["adj_close_adjusted"], "symbol"].nunique()) if "adj_close_adjusted" in df else 0,
+        "dividend_rows": int(len(dividends)),
+        "dividend_amount_rows": dividend_amount_rows,
+        "interest_rate_rows": interest_rows,
+        "interest_rate_value_rows": interest_value_rows,
+        "interest_rate_date_max": interest_date_max,
+        "interest_rate_staleness_days": interest_staleness_days,
+        "tbill_3m_rows": int(df["tbill_3m"].notna().sum()) if "tbill_3m" in df else 0,
+        "policy_rate_rows": int(df["policy_rate"].notna().sum()) if "policy_rate" in df else 0,
+        "symbol_sentiment_rows": int(df["vader_score_mean"].notna().sum()) if "vader_score_mean" in df else 0,
+        "symbol_sentiment_symbols": int(df.loc[df["vader_score_mean"].notna(), "symbol"].nunique()) if "vader_score_mean" in df else 0,
         "market_sentiment_rows": int(df["market_vader_mean"].notna().sum()) if "market_vader_mean" in df else 0,
         "sp500_rows": int(df["sp500"].notna().sum()) if "sp500" in df else 0,
         "max_date_staleness_days": int((today - max_date).days),
@@ -98,6 +129,12 @@ def check_gates(metrics: dict, previous: dict, args: argparse.Namespace) -> list
             f"volume_zscore null rate {metrics['volume_zscore_null_pct']:.2%} exceeds "
             f"{args.max_volume_zscore_null_pct:.2%}"
         )
+    if INTEREST.exists():
+        interest = pd.read_csv(INTEREST)
+        required = {"date", "tbill_3m", "tbill_6m", "tbill_12m", "policy_rate", "source"}
+        missing = sorted(required - set(interest.columns))
+        if missing:
+            failures.append(f"interest_rates.csv missing columns: {', '.join(missing)}")
 
     prev_rows = previous.get("total_rows")
     if prev_rows:
@@ -148,6 +185,16 @@ def write_report(df: pd.DataFrame, metrics: dict, failures: list[str]) -> None:
         f"| Source OHLC-invalid rows | {metrics['source_ohlc_invalid_rows']:,} |",
         f"| OHLC-repaired rows | {metrics['ohlc_repaired_rows']:,} |",
         f"| `volume_zscore` null rate | {metrics['volume_zscore_null_pct']:.2%} |",
+        f"| Adjusted-close rows | {metrics['adj_close_adjusted_rows']:,} |",
+        f"| Adjusted-close symbols | {metrics['adj_close_adjusted_symbols']:,} |",
+        f"| Dividend rows with amount | {metrics['dividend_amount_rows']:,} / {metrics['dividend_rows']:,} |",
+        f"| Interest-rate source rows | {metrics['interest_rate_value_rows']:,} / {metrics['interest_rate_rows']:,} |",
+        f"| Interest-rate max date | {metrics['interest_rate_date_max'] or 'n/a'} |",
+        f"| Interest-rate staleness | {metrics['interest_rate_staleness_days'] if metrics['interest_rate_staleness_days'] is not None else 'n/a'} days |",
+        f"| Rows with T-bill 3M | {metrics['tbill_3m_rows']:,} |",
+        f"| Rows with policy rate | {metrics['policy_rate_rows']:,} |",
+        f"| Rows with symbol sentiment | {metrics['symbol_sentiment_rows']:,} |",
+        f"| Symbols with sentiment | {metrics['symbol_sentiment_symbols']:,} |",
         f"| Rows with macro data (sp500 non-null) | {metrics['sp500_rows']:,} |",
         f"| Rows with market sentiment | {metrics['market_sentiment_rows']:,} |",
         f"| Max-date staleness | {metrics['max_date_staleness_days']} days |",
@@ -188,8 +235,8 @@ def write_report(df: pd.DataFrame, metrics: dict, failures: list[str]) -> None:
         "## Known Limitations",
         "",
         "- `usd_lkr` is annual World Bank data forward-filled to daily rows.",
-        "- `interest_rates.csv` is a placeholder until CBSL T-bill history is ingested.",
-        "- `adj_close` currently equals `close` because dividend amounts are not available.",
+        "- `interest_rates.csv` is populated from a manual CBSL CSV/XLSX import under `data/raw/macro/`.",
+        "- `adj_close` applies only dividend rows with parsed `amount_per_share`; missing amounts are reported.",
         "- `vader_label` is derived from VADER thresholds; true `finbert_label` is reserved for model inference.",
         "- Symbol-level sentiment is partial and depends on dated CSE announcement records.",
         "- `source_*` OHLC columns preserve original CSE values where high/low repairs were needed.",

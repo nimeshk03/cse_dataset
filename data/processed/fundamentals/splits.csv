@@ -1,1 +1,1 @@
-symbol,company,announcementCategory,xd,tradingSuspended,announcementId
+id,createdDate,dateOfAnnouncement,announcementId,announcementCategory,company,type,symbol,recordDate,allotment,xr,xc,xd,tradingCommencement,tradingSuspended,paymentDate,agmDate,dateOfAgmInitial,logoUrl,remarks

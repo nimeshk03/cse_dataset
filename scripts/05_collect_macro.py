@@ -8,6 +8,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
  
 def setup():
     os.makedirs('data/processed/macro', exist_ok=True)
+    os.makedirs('data/raw/macro', exist_ok=True)
  
 def _ticker_history(ticker_symbol, start="2000-01-01"):
     try:
@@ -106,17 +107,68 @@ def fetch_wbdata():
     except Exception as e:
         logging.error(f"Could not fetch wbdata: {e}")
  
+def normalize_interest_rates():
+    output = 'data/processed/macro/interest_rates.csv'
+    candidates = [
+        'data/raw/macro/interest_rates.csv',
+        'data/raw/macro/interest_rates.xlsx',
+        'data/raw/macro/cbsl_interest_rates.csv',
+        'data/raw/macro/cbsl_interest_rates.xlsx',
+    ]
+    source_path = next((p for p in candidates if os.path.exists(p)), None)
+    columns = ['date', 'tbill_3m', 'tbill_6m', 'tbill_12m', 'policy_rate', 'source']
+
+    if source_path is None:
+        pd.DataFrame(columns=columns).to_csv(output, index=False)
+        logging.info("Created empty interest_rates.csv; place CBSL export in data/raw/macro/ to populate it.")
+        return
+
+    if source_path.endswith('.xlsx'):
+        raw = pd.read_excel(source_path)
+    else:
+        raw = pd.read_csv(source_path)
+
+    def find_col(aliases):
+        normalized = {str(c).strip().lower().replace(' ', '_').replace('-', '_'): c for c in raw.columns}
+        for alias in aliases:
+            key = alias.lower().replace(' ', '_').replace('-', '_')
+            if key in normalized:
+                return normalized[key]
+        return None
+
+    mapping = {
+        'date': find_col(['date', 'period', 'week_ending', 'month']),
+        'tbill_3m': find_col(['tbill_3m', 't_bill_3m', '3_month_t_bill', '91_day_t_bill', '91_day_treasury_bill_rate', '91_days']),
+        'tbill_6m': find_col(['tbill_6m', 't_bill_6m', '6_month_t_bill', '182_day_t_bill', '182_day_treasury_bill_rate', '182_days']),
+        'tbill_12m': find_col(['tbill_12m', 't_bill_12m', '12_month_t_bill', '364_day_t_bill', '364_day_treasury_bill_rate', '364_days']),
+        'policy_rate': find_col(['policy_rate', 'standing_lending_facility_rate', 'slfr', 'standing_deposit_facility_rate', 'sdf_rate', 'repo_rate']),
+    }
+    if mapping['date'] is None:
+        raise ValueError(f"Interest-rate source {source_path} must include a date column")
+
+    out = pd.DataFrame()
+    out['date'] = pd.to_datetime(raw[mapping['date']], errors='coerce')
+    for col in ['tbill_3m', 'tbill_6m', 'tbill_12m', 'policy_rate']:
+        src = mapping[col]
+        out[col] = pd.to_numeric(raw[src], errors='coerce') if src else pd.NA
+    out['source'] = os.path.basename(source_path)
+    out = out.dropna(subset=['date']).sort_values('date').drop_duplicates('date')
+    out['date'] = out['date'].dt.strftime('%Y-%m-%d')
+    out[columns].to_csv(output, index=False)
+    logging.info("Saved normalized interest rates from %s with %d rows.", source_path, len(out))
+
+
 def create_placeholders():
     path = 'data/processed/macro/interest_rates.csv'
     if not os.path.exists(path):
-        pd.DataFrame(columns=['date', 'tbill_3m', 'tbill_12m']).to_csv(path, index=False)
+        pd.DataFrame(columns=['date', 'tbill_3m', 'tbill_6m', 'tbill_12m', 'policy_rate', 'source']).to_csv(path, index=False)
         logging.info("Created placeholder for interest_rates.csv (Requires manual CBSL download)")
  
 def main():
     setup()
     fetch_yfinance_data()
     fetch_wbdata()
-    create_placeholders()
+    normalize_interest_rates()
  
 if __name__ == "__main__":
     main()

@@ -4,8 +4,8 @@ Automated data pipeline for a machine-learning-ready Colombo Stock Exchange
 (CSE) dataset.
 
 **Status:** daily automation hardening  
-**Current generated coverage:** 290 symbols, 1,222,640 price rows,
-2010-01-01 to 2026-02-27  
+**Current generated coverage:** 295 symbols, 1,240,806 price rows,
+2010-01-01 to 2026-05-26  
 **Primary source:** undocumented CSE `tradeSummary` daily market API
 
 ---
@@ -29,10 +29,10 @@ published outputs are intended to be committed after validation passes.
 | Domain | File | Current Rows | Notes |
 |---|---:|---:|---|
 | Company metadata | `data/processed/company_metadata.csv` | 305 | 302 active, 3 delisted in the current local artifact |
-| Daily OHLCV | `data/processed/all_stocks_merged.parquet` | 1,222,640 | Built from CSE `tradeSummary` |
-| Cleaned/features | `data/processed/all_stocks_features.parquet` | 1,222,640 | Returns, volatility, MA ratios, volume z-score |
-| Published unified dataset | `data/published/cse_unified.parquet` | 1,222,640 | Prices + features + macro + sentiment |
-| Dividends | `data/processed/fundamentals/dividends.csv` | 1,605 | Ex/payment dates only; no amounts yet |
+| Daily OHLCV | `data/processed/all_stocks_merged.parquet` | 1,240,806 | Built from CSE `tradeSummary` |
+| Cleaned/features | `data/processed/all_stocks_features.parquet` | 1,240,806 | Returns, volatility, MA ratios, volume z-score |
+| Published unified dataset | `data/published/cse_unified.parquet` | 1,240,806 | Prices + features + macro + sentiment |
+| Dividends | `data/processed/fundamentals/dividends.csv` | 1,654 | Ex/payment dates preserved; parsed amount fields included |
 | Splits | `data/processed/fundamentals/splits.csv` | 0 | No split rows in current artifact |
 | Annual report index | `data/processed/fundamentals/annual_reports_index.csv` | 4,128 | Official CSE PDF links |
 | LBO news | `data/processed/news/lbo_articles_clean.csv` | 2,000 | WordPress API archive sample |
@@ -124,15 +124,16 @@ Use `--allow-stale` only for local/offline rebuilds against old artifacts.
 
 ## Known Limitations
 
-- `adj_close` currently equals `close`; dividend amounts are not yet available
-  from the CSE corporate calendar payload.
-- `interest_rates.csv` is a placeholder until CBSL T-bill history is ingested.
+- `adj_close` uses parsed dividend amounts where available; events without
+  amounts are preserved and reported but not applied.
+- `interest_rates.csv` is populated from a manual CBSL CSV/XLSX import placed
+  under `data/raw/macro/`.
 - USD/LKR is annual World Bank data forward-filled to daily rows unless a daily
   source is available.
 - `vader_label` is a VADER-threshold label. `finbert_label` is reserved for true
   FinBERT inference and is currently null.
-- Symbol-level sentiment is partial because some CSE news API payloads do not
-  expose announcement dates.
+- Symbol-level sentiment is partial because some CSE news API payloads still do
+  not expose recoverable announcement dates.
 - The current quality baseline still has OHLC-invalid rows; these are flagged
   in `source_ohlc_invalid`. Published `high`/`low` values are repaired when the
   fix is deterministic, and `source_*` columns preserve the original values.
