@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-05-26T12:54:42Z",
+  "generated_at_utc": "2026-05-26T21:55:15Z",
   "total_rows": 1240806,
   "symbols": 295,
   "date_min": "2010-01-01",
@@ -13,7 +13,7 @@
   "volume_zscore_null_pct": 0.0,
   "adj_close_adjusted_rows": 0,
   "adj_close_adjusted_symbols": 0,
-  "dividend_rows": 1654,
+  "dividend_rows": 1656,
   "dividend_amount_rows": 0,
   "interest_rate_rows": 0,
   "interest_rate_value_rows": 0,
@@ -23,7 +23,7 @@
   "policy_rate_rows": 0,
   "symbol_sentiment_rows": 0,
   "symbol_sentiment_symbols": 0,
-  "market_sentiment_rows": 145003,
+  "market_sentiment_rows": 178506,
   "sp500_rows": 1224398,
   "max_date_staleness_days": 0,
   "failures": []
