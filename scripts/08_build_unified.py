@@ -82,7 +82,7 @@ def load_sentiment() -> tuple[pd.DataFrame, pd.DataFrame]:
                 vader_score_mean=("vader_score", "mean"),
                 vader_score_max=("vader_score", "max"),
                 news_count=("vader_score", "count"),
-                finbert_label=("finbert_label", lambda x: x.mode().iloc[0] if len(x) > 0 else "neutral"),
+                vader_label=("vader_label", lambda x: x.mode().iloc[0] if len(x) > 0 else "neutral"),
             )
             .reset_index()
         )
@@ -132,6 +132,7 @@ def build(price: pd.DataFrame, macro: pd.DataFrame,
         df["vader_score_mean"] = np.nan
         df["vader_score_max"]  = np.nan
         df["news_count"]       = 0
+        df["vader_label"]      = np.nan
         df["finbert_label"]    = np.nan
 
     # Left-join market-level sentiment on date only (LBO)

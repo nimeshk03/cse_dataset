@@ -61,8 +61,9 @@ def main():
         df["text"] = df.get("title", "").fillna("")
 
     log.info("Scoring VADER...")
-    df["vader_score"]  = df["text"].apply(lambda t: get_vader_compound(t, analyzer))
-    df["finbert_label"] = df["vader_score"].apply(map_label)
+    df["vader_score"] = df["text"].apply(lambda t: get_vader_compound(t, analyzer))
+    df["vader_label"] = df["vader_score"].apply(map_label)
+    df["finbert_label"] = pd.NA
 
     # Normalise date column
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
@@ -72,11 +73,11 @@ def main():
 
     # Verification
     assert df["vader_score"].notna().all(), "Some vader_score values are null"
-    assert set(df["finbert_label"].unique()).issubset({"positive", "neutral", "negative"})
-    pos = (df["finbert_label"] == "positive").sum()
-    neg = (df["finbert_label"] == "negative").sum()
-    neu = (df["finbert_label"] == "neutral").sum()
-    log.info("Label distribution — positive: %d, neutral: %d, negative: %d", pos, neu, neg)
+    assert set(df["vader_label"].unique()).issubset({"positive", "neutral", "negative"})
+    pos = (df["vader_label"] == "positive").sum()
+    neg = (df["vader_label"] == "negative").sum()
+    neu = (df["vader_label"] == "neutral").sum()
+    log.info("VADER label distribution — positive: %d, neutral: %d, negative: %d", pos, neu, neg)
     log.info("Verification passed.")
 
 

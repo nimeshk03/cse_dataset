@@ -1,0 +1,18 @@
+{
+  "generated_at_utc": "2026-05-26T11:48:22Z",
+  "total_rows": 1240806,
+  "symbols": 295,
+  "date_min": "2010-01-01",
+  "date_max": "2026-05-26",
+  "columns": 40,
+  "duplicate_symbol_date_rows": 0,
+  "ohlc_invalid_rows": 0,
+  "source_ohlc_invalid_rows": 38936,
+  "ohlc_repaired_rows": 38936,
+  "ohlc_invalid_pct": 0.0,
+  "volume_zscore_null_pct": 0.0,
+  "market_sentiment_rows": 145003,
+  "sp500_rows": 1224398,
+  "max_date_staleness_days": 0,
+  "failures": []
+}

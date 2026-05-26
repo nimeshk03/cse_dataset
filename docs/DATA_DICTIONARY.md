@@ -38,6 +38,13 @@ One row per stock per trading day.
 | `turnover` | float64 | Total traded value in LKR |
 | `trade_count` | int64 | Number of individual trades |
 | `pct_change` | float64 | Daily percentage change in close price |
+| `source_open` | float64 | Original open value from the CSE payload before any repair |
+| `source_high` | float64 | Original high value from the CSE payload before any repair |
+| `source_low` | float64 | Original low value from the CSE payload before any repair |
+| `source_close` | float64 | Original close value from the CSE payload before any repair |
+| `source_ohlc_invalid` | bool | Whether original high/low failed to bound open/close |
+| `ohlc_repaired` | bool | Whether published high/low were repaired deterministically |
+| `ohlc_invalid` | bool | Whether published high/low still fail OHLC validation after repair |
 
 ---
 
@@ -99,6 +106,7 @@ One row per stock per trading day.
 |---|---|---|
 | `symbol` | string | CSE ticker symbol the announcement relates to |
 | `date` | datetime | Announcement date |
+| `date_missing_reason` | string | Reason date is absent when the API payload does not provide one |
 | `source` | string | Always `CSE` |
 | `title` | string | Announcement subject |
 | `text` | string | Full announcement body text (HTML stripped) |
@@ -119,9 +127,10 @@ All news from both sources with sentiment scores appended.
 | `text` | string | Input text used for sentiment scoring |
 | `url` | string | Source URL |
 | `vader_score` | float64 | VADER compound score, range [-1.0, +1.0] |
-| `finbert_label` | string | Mapped label: `positive`, `neutral`, or `negative` |
+| `vader_label` | string | Mapped VADER label: `positive`, `neutral`, or `negative` |
+| `finbert_label` | string | Reserved for true FinBERT inference; currently null |
 
-> `finbert_label` is derived from `vader_score` thresholds (≥0.05 → positive, ≤-0.05 → negative) as a CPU-friendly baseline. True FinBERT inference requires GPU (see roadmap).
+> `vader_label` is derived from `vader_score` thresholds (>=0.05 positive, <=-0.05 negative). `finbert_label` is reserved for future model inference.
 
 ---
 

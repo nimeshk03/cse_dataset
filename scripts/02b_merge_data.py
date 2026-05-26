@@ -28,6 +28,16 @@ def process_and_merge():
     logging.info(f"Found {len(csv_files)} stock CSV files to merge.")
     
     dfs = []
+    parquet_path = 'data/processed/all_stocks_merged.parquet'
+
+    if os.path.exists(parquet_path):
+        try:
+            existing = pd.read_parquet(parquet_path)
+            dfs.append(existing)
+            logging.info("Loaded existing merged parquet: %d rows", len(existing))
+        except Exception as e:
+            logging.warning("Could not load existing merged parquet: %s", e)
+
     for f in csv_files:
         try:
             df = pd.read_csv(f)
@@ -52,8 +62,6 @@ def process_and_merge():
     # Sort and drop duplicates
     merged_df = merged_df.sort_values(['symbol', 'Date']).drop_duplicates(subset=['symbol', 'Date'])
     
-    # Save as parquet
-    parquet_path = 'data/processed/all_stocks_merged.parquet'
     merged_df.to_parquet(parquet_path, engine='pyarrow', index=False)
     
     logging.info(f"Successfully merged data into {parquet_path}")

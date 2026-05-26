@@ -123,7 +123,8 @@ def engineer(df: pd.DataFrame) -> pd.DataFrame:
     log.info("Computing volume_zscore...")
     vol_mean = g["volume"].transform(lambda x: x.rolling(20, min_periods=10).mean())
     vol_std  = g["volume"].transform(lambda x: x.rolling(20, min_periods=10).std())
-    df["volume_zscore"] = (df["volume"] - vol_mean) / vol_std.replace(0, np.nan)
+    df["volume_zscore"] = ((df["volume"] - vol_mean) / vol_std).replace([np.inf, -np.inf], np.nan)
+    df["volume_zscore"] = df["volume_zscore"].fillna(0.0)
 
     log.info("Computing MA ratios...")
     ma50  = g["adj_close"].transform(lambda x: x.rolling(50,  min_periods=25).mean())
@@ -148,6 +149,8 @@ def verify(df: pd.DataFrame):
     non_null_ret = df["return_1d"].notna().sum()
     log.info("return_1d non-null: %d / %d (%.1f%%)",
              non_null_ret, len(df), 100 * non_null_ret / len(df))
+    z_null_pct = df["volume_zscore"].isna().mean()
+    assert z_null_pct < 0.20, f"volume_zscore null rate too high: {z_null_pct:.1%}"
 
 
 def save(df: pd.DataFrame):

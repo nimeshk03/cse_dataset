@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
 RAW_CSV = 'data/raw/ohlcv/all_raw_2010_to_present.csv'
+MERGED_PARQUET = 'data/processed/all_stocks_merged.parquet'
 
 
 def get_incremental_start() -> pd.Timestamp:
@@ -25,6 +26,18 @@ def get_incremental_start() -> pd.Timestamp:
             return start
         except Exception as e:
             logging.warning("Could not read existing raw CSV (%s) — falling back to full fetch", e)
+
+    if os.path.exists(MERGED_PARQUET):
+        try:
+            existing = pd.read_parquet(MERGED_PARQUET, columns=['Date'])
+            last_date = pd.to_datetime(existing['Date']).max()
+            start = last_date + pd.Timedelta(days=1)
+            logging.info("Incremental mode: raw cache missing, latest merged date = %s, starting from %s",
+                         last_date.date(), start.date())
+            return start
+        except Exception as e:
+            logging.warning("Could not read existing merged parquet (%s) — falling back to full fetch", e)
+
     return pd.to_datetime('2010-01-01')
 
 def fetch_trade_summary_for_date(date_str):
@@ -46,13 +59,14 @@ def collect_historical_prices(mode: str = 'full'):
 
     # 1. Determine dates to fetch
     start_date = get_incremental_start() if mode == 'incremental' else pd.to_datetime('2010-01-01')
-    end_date = pd.to_datetime(datetime.today().strftime('%Y-%m-%d')) - pd.Timedelta(days=1)
+    end_date = pd.to_datetime(datetime.today().strftime('%Y-%m-%d'))
     
     # Generate business days
     trading_dates = pd.date_range(start=start_date, end=end_date, freq='B')
     date_strings = [d.strftime('%Y-%m-%d') for d in trading_dates]
     
-    logging.info(f"Generated {len(date_strings)} potential trading dates from 2010 to present.")
+    logging.info("Generated %d potential trading dates from %s to %s.",
+                 len(date_strings), start_date.date(), end_date.date())
     
     # To avoid overwhelming the server, we'll process in chunks and sleep
     all_data = []

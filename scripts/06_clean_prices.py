@@ -36,11 +36,23 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
     df = df.dropna(subset=["close"])
     log.info("Rows after dropping null close: %d", len(df))
 
-    # 3. OHLC logic validation flags (don't drop — just flag)
+    # 3. Preserve source OHLC and repair deterministic high/low bound issues.
+    for col in ["open", "high", "low", "close"]:
+        df[f"source_{col}"] = df[col]
+
+    source_ohlc_invalid = (df["high"] < df[["open", "close"]].max(axis=1)) | \
+                          (df["low"]  > df[["open", "close"]].min(axis=1))
+    df["source_ohlc_invalid"] = source_ohlc_invalid
+    df["ohlc_repaired"] = source_ohlc_invalid
+    log.info("Source OHLC-invalid rows flagged: %d", source_ohlc_invalid.sum())
+
+    df["high"] = df[["high", "open", "close"]].max(axis=1)
+    df["low"] = df[["low", "open", "close"]].min(axis=1)
+
     ohlc_invalid = (df["high"] < df[["open", "close"]].max(axis=1)) | \
                    (df["low"]  > df[["open", "close"]].min(axis=1))
     df["ohlc_invalid"] = ohlc_invalid
-    log.info("OHLC-invalid rows flagged: %d", ohlc_invalid.sum())
+    log.info("Post-repair OHLC-invalid rows flagged: %d", ohlc_invalid.sum())
 
     # 4. Zero-volume flag
     df["is_trading_day"] = df["volume"] > 0

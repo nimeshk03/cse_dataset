@@ -46,9 +46,18 @@ def get_company_news(symbol: str, sec_id: str) -> list[dict]:
             items = r.json().get("BN", [])
             rows = []
             for item in items:
+                raw_date = (
+                    item.get("date")
+                    or item.get("createdDate")
+                    or item.get("publishedDate")
+                    or item.get("uploadedDate")
+                    or item.get("newsDate")
+                    or item.get("announcementDate")
+                )
                 rows.append({
                     "id":      item.get("id"),
-                    "date":    item.get("date"),
+                    "date":    raw_date,
+                    "date_missing_reason": None if raw_date else "missing_from_api_payload",
                     "source":  "CSE",
                     "symbol":  symbol,
                     "title":   clean_html(item.get("fileText", "")),
@@ -91,7 +100,12 @@ def main():
         raw_df.to_csv(RAW_OUT, index=False)
         log.info("Saved raw: %s (%d rows)", RAW_OUT, len(raw_df))
 
-    clean_df = raw_df[["id", "date", "source", "symbol", "title", "url"]].copy()
+    if "date_missing_reason" not in raw_df.columns:
+        raw_df["date_missing_reason"] = raw_df["date"].apply(
+            lambda v: None if pd.notna(v) and str(v).strip() else "missing_from_api_payload"
+        )
+
+    clean_df = raw_df[["id", "date", "date_missing_reason", "source", "symbol", "title", "url"]].copy()
     clean_df["text"] = clean_df["title"].fillna("")
     clean_df.to_csv(CLEAN_OUT, index=False)
     log.info("Saved clean: %s (%d rows)", CLEAN_OUT, len(clean_df))
