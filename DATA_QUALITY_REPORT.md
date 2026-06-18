@@ -1,19 +1,19 @@
 # CSE Dataset - Data Quality Report
 
-Generated: 2026-06-17T22:10:05Z
+Generated: 2026-06-18T22:21:24Z
 
 ## Summary
 
 | Metric | Value |
 |---|---|
-| Total rows | 1,245,417 |
+| Total rows | 1,245,707 |
 | Symbols | 297 |
-| Date range | 2010-01-01 to 2026-06-17 |
+| Date range | 2010-01-01 to 2026-06-18 |
 | Columns | 46 |
 | Duplicate `(symbol, date)` rows | 0 |
 | OHLC-invalid rows | 0 (0.00%) |
-| Source OHLC-invalid rows | 39,192 |
-| OHLC-repaired rows | 39,192 |
+| Source OHLC-invalid rows | 39,203 |
+| OHLC-repaired rows | 39,203 |
 | `volume_zscore` null rate | 0.00% |
 | Adjusted-close rows | 0 |
 | Adjusted-close symbols | 0 |
@@ -37,26 +37,26 @@ Generated: 2026-06-17T22:10:05Z
 
 | Column | Null Count | Null % |
 |---|---|---|
-| `policy_rate` | 1,245,417 | 100.0% |
-| `vader_score_mean` | 1,245,417 | 100.0% |
-| `vader_score_max` | 1,245,417 | 100.0% |
-| `vader_label` | 1,245,417 | 100.0% |
-| `finbert_label` | 1,245,417 | 100.0% |
-| `tbill_6m` | 1,245,417 | 100.0% |
-| `tbill_3m` | 1,245,417 | 100.0% |
-| `tbill_12m` | 1,245,417 | 100.0% |
-| `market_vader_mean` | 1,066,070 | 85.6% |
-| `market_news_count` | 1,066,070 | 85.6% |
-| `usd_lkr` | 110,937 | 8.91% |
-| `gdp_growth_pct` | 34,957 | 2.81% |
-| `inflation_pct` | 34,957 | 2.81% |
-| `close_to_ma200` | 29,109 | 2.34% |
-| `nikkei225` | 21,019 | 1.69% |
-| `hangseng` | 21,019 | 1.69% |
-| `sp500` | 21,019 | 1.69% |
-| `close_to_ma50` | 7,092 | 0.57% |
-| `return_20d` | 5,912 | 0.47% |
-| `volatility_20d` | 2,962 | 0.24% |
+| `policy_rate` | 1,245,707 | 100.0% |
+| `vader_score_mean` | 1,245,707 | 100.0% |
+| `vader_score_max` | 1,245,707 | 100.0% |
+| `vader_label` | 1,245,707 | 100.0% |
+| `finbert_label` | 1,245,707 | 100.0% |
+| `tbill_6m` | 1,245,707 | 100.0% |
+| `tbill_3m` | 1,245,707 | 100.0% |
+| `tbill_12m` | 1,245,707 | 100.0% |
+| `market_vader_mean` | 1,066,360 | 85.6% |
+| `market_news_count` | 1,066,360 | 85.6% |
+| `usd_lkr` | 111,227 | 8.93% |
+| `gdp_growth_pct` | 35,247 | 2.83% |
+| `inflation_pct` | 35,247 | 2.83% |
+| `close_to_ma200` | 29,115 | 2.34% |
+| `nikkei225` | 21,309 | 1.71% |
+| `hangseng` | 21,309 | 1.71% |
+| `sp500` | 21,309 | 1.71% |
+| `close_to_ma50` | 7,094 | 0.57% |
+| `return_20d` | 5,914 | 0.47% |
+| `volatility_20d` | 2,964 | 0.24% |
 | `return_5d` | 1,485 | 0.12% |
 | `pct_change_1d` | 297 | 0.02% |
 | `return_1d` | 297 | 0.02% |
@@ -65,13 +65,13 @@ Generated: 2026-06-17T22:10:05Z
 
 | Symbol | First Date | Last Date | Trading Days |
 |---|---|---|---|
-| CHL.N0000 | 2026-03-02 | 2026-06-17 | 78 |
-| CHL.X0000 | 2026-03-02 | 2026-06-17 | 78 |
+| CHL.N0000 | 2026-03-02 | 2026-06-18 | 79 |
+| CHL.X0000 | 2026-03-02 | 2026-06-18 | 79 |
 | CINS.N0000 | 2026-03-02 | 2026-06-17 | 75 |
-| HNBF.R0000 | 2026-06-10 | 2026-06-17 | 6 |
-| HNBF.R0001 | 2026-06-10 | 2026-06-17 | 6 |
-| JXG.N0000 | 2026-03-02 | 2026-06-17 | 78 |
-| NAMU.N0000 | 2026-03-02 | 2026-06-17 | 78 |
+| HNBF.R0000 | 2026-06-10 | 2026-06-18 | 7 |
+| HNBF.R0001 | 2026-06-10 | 2026-06-18 | 7 |
+| JXG.N0000 | 2026-03-02 | 2026-06-18 | 79 |
+| NAMU.N0000 | 2026-03-02 | 2026-06-18 | 79 |
 
 ## Known Limitations
 
