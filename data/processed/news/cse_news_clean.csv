@@ -1,4 +1,5 @@
 id,date,date_source,date_missing_reason,source,symbol,title,url,text
+e14cb1f79692d2d156576fb22101d1c0,2026-06-22 11:12:12,api_field:publishedDate,,CSE,ATL.N0000,,,
 814d6fd5a3c681c6014fdf33a4a9b88a,2026-02-16 09:28:41,api_field:publishedDate,,CSE,ATL.N0000,,,
 ef3cc6a3dfe7699a1376fae7827548ed,2025-01-23 09:18:50,api_field:publishedDate,,CSE,ATL.N0000,,,
 52005dd8a0f6dd8b0bba4269956f4dfd,2025-01-15 10:18:42,api_field:publishedDate,,CSE,ATL.N0000,,,
