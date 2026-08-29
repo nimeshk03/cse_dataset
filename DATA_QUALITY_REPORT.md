@@ -1,6 +1,6 @@
 # CSE Dataset - Data Quality Report
 
-Generated: 2026-08-28T04:14:19Z
+Generated: 2026-08-29T02:52:40Z
 
 ## Summary
 
@@ -17,7 +17,7 @@ Generated: 2026-08-28T04:14:19Z
 | `volume_zscore` null rate | 0.00% |
 | Adjusted-close rows | 0 |
 | Adjusted-close symbols | 0 |
-| Dividend rows with amount | 0 / 1,725 |
+| Dividend rows with amount | 0 / 1,730 |
 | Interest-rate source rows | 0 / 0 |
 | Interest-rate max date | n/a |
 | Interest-rate staleness | n/a days |
@@ -27,7 +27,7 @@ Generated: 2026-08-28T04:14:19Z
 | Symbols with sentiment | 0 |
 | Rows with macro data (sp500 non-null) | 1,224,398 |
 | Rows with market sentiment | 177,899 |
-| Max-date staleness | 0 days |
+| Max-date staleness | 1 days |
 
 ## Validation Gates
 
