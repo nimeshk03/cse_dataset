@@ -1,6 +1,6 @@
 # CSE Dataset - Data Quality Report
 
-Generated: 2026-09-29T00:23:50Z
+Generated: 2026-09-29T23:41:40Z
 
 ## Summary
 
@@ -26,7 +26,7 @@ Generated: 2026-09-29T00:23:50Z
 | Rows with symbol sentiment | 0 |
 | Symbols with sentiment | 0 |
 | Rows with macro data (sp500 non-null) | 1,224,398 |
-| Rows with market sentiment | 143,542 |
+| Rows with market sentiment | 177,755 |
 | Max-date staleness | 0 days |
 
 ## Validation Gates
@@ -45,8 +45,8 @@ Generated: 2026-09-29T00:23:50Z
 | `tbill_6m` | 1,266,079 | 100.0% |
 | `tbill_3m` | 1,266,079 | 100.0% |
 | `tbill_12m` | 1,266,079 | 100.0% |
-| `market_vader_mean` | 1,122,537 | 88.66% |
-| `market_news_count` | 1,122,537 | 88.66% |
+| `market_vader_mean` | 1,088,324 | 85.96% |
+| `market_news_count` | 1,088,324 | 85.96% |
 | `usd_lkr` | 131,599 | 10.39% |
 | `sp500` | 41,681 | 3.29% |
 | `inflation_pct` | 41,681 | 3.29% |
