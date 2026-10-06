@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-10-06T01:20:11Z",
+  "generated_at_utc": "2026-10-06T23:47:48Z",
   "total_rows": 1267471,
   "symbols": 300,
   "date_min": "2010-01-01",
@@ -23,7 +23,7 @@
   "policy_rate_rows": 0,
   "symbol_sentiment_rows": 0,
   "symbol_sentiment_symbols": 0,
-  "market_sentiment_rows": 177417,
+  "market_sentiment_rows": 176827,
   "sp500_rows": 1224398,
   "max_date_staleness_days": 0,
   "failures": []
