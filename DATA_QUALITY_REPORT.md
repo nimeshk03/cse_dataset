@@ -1,19 +1,19 @@
 # CSE Dataset - Data Quality Report
 
-Generated: 2026-10-16T22:47:13Z
+Generated: 2026-10-19T23:34:54Z
 
 ## Summary
 
 | Metric | Value |
 |---|---|
-| Total rows | 1,269,732 |
-| Symbols | 300 |
-| Date range | 2010-01-01 to 2026-10-16 |
+| Total rows | 1,270,015 |
+| Symbols | 301 |
+| Date range | 2010-01-01 to 2026-10-19 |
 | Columns | 46 |
 | Duplicate `(symbol, date)` rows | 0 |
 | OHLC-invalid rows | 0 (0.00%) |
-| Source OHLC-invalid rows | 41,128 |
-| OHLC-repaired rows | 41,128 |
+| Source OHLC-invalid rows | 41,153 |
+| OHLC-repaired rows | 41,153 |
 | `volume_zscore` null rate | 0.00% |
 | Adjusted-close rows | 0 |
 | Adjusted-close symbols | 0 |
@@ -26,7 +26,7 @@ Generated: 2026-10-16T22:47:13Z
 | Rows with symbol sentiment | 0 |
 | Symbols with sentiment | 0 |
 | Rows with macro data (sp500 non-null) | 1,224,398 |
-| Rows with market sentiment | 176,478 |
+| Rows with market sentiment | 176,181 |
 | Max-date staleness | 0 days |
 
 ## Validation Gates
@@ -37,44 +37,45 @@ Generated: 2026-10-16T22:47:13Z
 
 | Column | Null Count | Null % |
 |---|---|---|
-| `policy_rate` | 1,269,732 | 100.0% |
-| `vader_score_mean` | 1,269,732 | 100.0% |
-| `vader_score_max` | 1,269,732 | 100.0% |
-| `vader_label` | 1,269,732 | 100.0% |
-| `finbert_label` | 1,269,732 | 100.0% |
-| `tbill_6m` | 1,269,732 | 100.0% |
-| `tbill_3m` | 1,269,732 | 100.0% |
-| `tbill_12m` | 1,269,732 | 100.0% |
-| `market_vader_mean` | 1,093,254 | 86.1% |
-| `market_news_count` | 1,093,254 | 86.1% |
-| `gdp_growth_pct` | 45,334 | 3.57% |
-| `sp500` | 45,334 | 3.57% |
-| `usd_lkr` | 45,334 | 3.57% |
-| `nikkei225` | 45,334 | 3.57% |
-| `inflation_pct` | 45,334 | 3.57% |
-| `hangseng` | 45,334 | 3.57% |
-| `close_to_ma200` | 29,291 | 2.31% |
-| `close_to_ma50` | 7,131 | 0.56% |
-| `return_20d` | 5,947 | 0.47% |
-| `volatility_20d` | 2,987 | 0.24% |
-| `return_5d` | 1,500 | 0.12% |
-| `pct_change_1d` | 457 | 0.04% |
-| `return_1d` | 457 | 0.04% |
+| `policy_rate` | 1,270,015 | 100.0% |
+| `vader_score_mean` | 1,270,015 | 100.0% |
+| `vader_score_max` | 1,270,015 | 100.0% |
+| `vader_label` | 1,270,015 | 100.0% |
+| `finbert_label` | 1,270,015 | 100.0% |
+| `tbill_6m` | 1,270,015 | 100.0% |
+| `tbill_3m` | 1,270,015 | 100.0% |
+| `tbill_12m` | 1,270,015 | 100.0% |
+| `market_vader_mean` | 1,093,834 | 86.13% |
+| `market_news_count` | 1,093,834 | 86.13% |
+| `gdp_growth_pct` | 45,617 | 3.59% |
+| `sp500` | 45,617 | 3.59% |
+| `usd_lkr` | 45,617 | 3.59% |
+| `nikkei225` | 45,617 | 3.59% |
+| `inflation_pct` | 45,617 | 3.59% |
+| `hangseng` | 45,617 | 3.59% |
+| `close_to_ma200` | 29,293 | 2.31% |
+| `close_to_ma50` | 7,132 | 0.56% |
+| `return_20d` | 5,948 | 0.47% |
+| `volatility_20d` | 2,988 | 0.24% |
+| `return_5d` | 1,501 | 0.12% |
+| `pct_change_1d` | 458 | 0.04% |
+| `return_1d` | 458 | 0.04% |
 
 ## Symbols with Thin Coverage (< 250 trading days)
 
 | Symbol | First Date | Last Date | Trading Days |
 |---|---|---|---|
 | AAF.R0000 | 2026-08-14 | 2026-08-21 | 6 |
-| CHL.N0000 | 2026-03-02 | 2026-10-16 | 165 |
-| CHL.X0000 | 2026-03-02 | 2026-10-16 | 160 |
-| CINS.N0000 | 2026-03-02 | 2026-10-14 | 134 |
+| CHL.N0000 | 2026-03-02 | 2026-10-19 | 166 |
+| CHL.X0000 | 2026-03-02 | 2026-10-19 | 161 |
+| CINS.N0000 | 2026-03-02 | 2026-10-19 | 135 |
+| CPRT.R0000 | 2026-10-19 | 2026-10-19 | 1 |
 | HNBF.R0000 | 2026-06-10 | 2026-06-18 | 7 |
 | HNBF.R0001 | 2026-06-10 | 2026-06-18 | 7 |
-| JXG.N0000 | 2026-03-02 | 2026-10-16 | 165 |
+| JXG.N0000 | 2026-03-02 | 2026-10-19 | 166 |
 | MBSL.R0001 | 2026-07-21 | 2026-07-29 | 7 |
-| NAMU.N0000 | 2026-03-02 | 2026-10-16 | 163 |
-| SING.N0000 | 2026-07-23 | 2026-10-16 | 59 |
+| NAMU.N0000 | 2026-03-02 | 2026-10-19 | 164 |
+| SING.N0000 | 2026-07-23 | 2026-10-19 | 60 |
 
 ## Known Limitations
 
