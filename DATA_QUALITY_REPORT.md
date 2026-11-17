@@ -1,6 +1,6 @@
 # CSE Dataset - Data Quality Report
 
-Generated: 2026-11-14T00:55:05Z
+Generated: 2026-11-17T02:59:33Z
 
 ## Summary
 
@@ -27,7 +27,7 @@ Generated: 2026-11-14T00:55:05Z
 | Symbols with sentiment | 0 |
 | Rows with macro data (sp500 non-null) | 1,224,398 |
 | Rows with market sentiment | 175,782 |
-| Max-date staleness | 1 days |
+| Max-date staleness | 4 days |
 
 ## Validation Gates
 
