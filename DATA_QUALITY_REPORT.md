@@ -1,6 +1,6 @@
 # CSE Dataset - Data Quality Report
 
-Generated: 2026-11-27T02:48:13Z
+Generated: 2026-11-28T02:40:17Z
 
 ## Summary
 
@@ -17,7 +17,7 @@ Generated: 2026-11-27T02:48:13Z
 | `volume_zscore` null rate | 0.00% |
 | Adjusted-close rows | 0 |
 | Adjusted-close symbols | 0 |
-| Dividend rows with amount | 0 / 1,779 |
+| Dividend rows with amount | 0 / 1,780 |
 | Interest-rate source rows | 0 / 0 |
 | Interest-rate max date | n/a |
 | Interest-rate staleness | n/a days |
@@ -26,8 +26,8 @@ Generated: 2026-11-27T02:48:13Z
 | Rows with symbol sentiment | 0 |
 | Symbols with sentiment | 0 |
 | Rows with macro data (sp500 non-null) | 1,224,398 |
-| Rows with market sentiment | 176,327 |
-| Max-date staleness | 0 days |
+| Rows with market sentiment | 176,607 |
+| Max-date staleness | 1 days |
 
 ## Validation Gates
 
@@ -45,8 +45,8 @@ Generated: 2026-11-27T02:48:13Z
 | `tbill_6m` | 1,278,263 | 100.0% |
 | `tbill_3m` | 1,278,263 | 100.0% |
 | `tbill_12m` | 1,278,263 | 100.0% |
-| `market_vader_mean` | 1,101,936 | 86.21% |
-| `market_news_count` | 1,101,936 | 86.21% |
+| `market_vader_mean` | 1,101,656 | 86.18% |
+| `market_news_count` | 1,101,656 | 86.18% |
 | `gdp_growth_pct` | 53,865 | 4.21% |
 | `sp500` | 53,865 | 4.21% |
 | `usd_lkr` | 53,865 | 4.21% |
